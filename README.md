@@ -1,2 +1,2 @@
 # simple-service
-Simple Spring Boot service boilerplate with ui
+Simple Spring Boot service boilerplate with UI

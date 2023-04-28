@@ -1,0 +1,15 @@
+group = 'app.shyurock'
+version = '1.0.0'
+
+subprojects {
+
+	repositories {
+		mavenCentral()
+	}
+}
+
+ext {
+	set('testcontainersVersion', "1.18.0")
+	set('springBoot', '3.0.6')
+	set('dependencyManagement', '1.1.0')
+}

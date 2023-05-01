@@ -11,6 +11,7 @@ class User extends BaseEntity {
     String username
     String passwordHash
 
+    Date lastLoginDate
     UserProfile profile
 
     UserPermission permission

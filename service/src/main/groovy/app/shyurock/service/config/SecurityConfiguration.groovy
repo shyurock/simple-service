@@ -1,14 +1,20 @@
 package app.shyurock.service.config
 
+import app.shyurock.service.user.data.repository.UserRepository
 import app.shyurock.service.user.service.UserService
 import groovy.util.logging.Slf4j
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpStatus
+import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.authentication.HttpStatusServerEntryPoint
+import org.springframework.security.web.server.authorization.HttpStatusServerAccessDeniedHandler
 import reactor.core.publisher.Mono
 
 @Slf4j
@@ -25,15 +31,52 @@ class SecurityConfiguration {
         new ReactiveUserDetailsService() {
             @Override
             Mono<UserDetails> findByUsername(String username) {
+                log.info("Try log in with username $username")
                 userService.findUserByName(username)
                         .map {user ->
-                            log.debug("User by $username found, try auth")
+                            //log.debug("User by $username found, try auth")
                             User.withUsername(username)
                                     .password(user.passwordHash)
+                                    .authorities(user.permission.permissions.toArray() as String[])
                                     .build()
                         }
-                        .doOnSubscribe { log.info("Try log in with username $username") }
             }
         }
+    }
+
+    @Bean
+    SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http, UserRepository userRepository) {
+        http
+                .csrf().disable()
+                .authorizeExchange {
+                    it.pathMatchers('/actuator', '/actuator/**').permitAll()
+                            .pathMatchers('/api/swagger/**').permitAll()
+                            .pathMatchers('/*', '/assets/**').permitAll()
+                            .anyExchange().authenticated()
+                }
+                .formLogin {
+                    it.loginPage('/api/login')
+                            .authenticationSuccessHandler { ex, auth ->
+                                userRepository.findByUsername(auth.name)
+                                        .flatMap { user ->
+                                            ex.exchange.response.statusCode = HttpStatus.OK
+                                            user.lastLoginDate = new Date()
+                                            userRepository.save(user)
+                                        }.then()
+                            }
+                            .authenticationFailureHandler { ex, e ->
+                                Mono.error(new Exception())
+                            }
+                }
+                .logout {
+                    it
+                            .logoutUrl('/api/logout')
+                            .logoutSuccessHandler {it.exchange.response.statusCode = HttpStatus.OK }
+                }
+                .exceptionHandling {
+                    it.authenticationEntryPoint(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED))
+                            .accessDeniedHandler(new HttpStatusServerAccessDeniedHandler(HttpStatus.UNAUTHORIZED))
+                }
+                .build()
     }
 }

@@ -1,0 +1,16 @@
+plugins {
+    id 'org.siouan.frontend-jdk11' version '6.0.0'
+    id 'java'
+}
+
+frontend {
+    nodeVersion = '16.20.0'
+    installScript = 'install'
+    assembleScript = 'run build'
+}
+
+jar {
+    dependsOn 'assembleFrontend'
+    from 'dist'
+    into 'static'
+}

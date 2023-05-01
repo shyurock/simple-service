@@ -8,7 +8,7 @@ sourceCompatibility = '17'
 
 dependencies {
 	implementation project(':module:user')
-	//runtimeOnly project(':ui')
+	runtimeOnly project(':ui')
 
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'

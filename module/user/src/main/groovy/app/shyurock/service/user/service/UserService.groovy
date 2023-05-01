@@ -15,6 +15,6 @@ class UserService {
     @Autowired private RoleRepository roleRepository
 
     Mono<User> findUserByName(String username) {
-        userRepository.finByUsername(username)
+        userRepository.findByUsername(username)
     }
 }

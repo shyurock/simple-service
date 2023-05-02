@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import {createHtmlPlugin} from 'vite-plugin-html'
 import {resolve} from 'path'
 
+const srcPath = resolve(__dirname, 'src')
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -13,20 +14,20 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': resolve(__dirname, '/src')
+      '@/': `${srcPath}/`
     }
   },
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "./src/styles/variables";`
+        additionalData: `@import "@/styles/variables";`
       }
     }
   },
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:6000',
+        target: 'http://localhost:8090',
         changeOrigin: true,
         ws: true,
         // only https

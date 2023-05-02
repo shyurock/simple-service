@@ -1,10 +1,8 @@
 import {createApp} from 'vue'
-import './styles/style.css'
-import App from './App.vue'
+import App from '@/App.vue'
 import ElementPlus from 'element-plus'
-import 'element-plus/theme-chalk/index.css'
-import '@/styles/index.scss'
-import router from "./router" // global css
+import router from "@/router"
+import '@/assets/vendor/index.js'
 
 createApp(App)
     .use(ElementPlus)

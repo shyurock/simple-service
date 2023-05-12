@@ -32,6 +32,10 @@ export default defineConfig({
         ws: true,
         // only https
         // secure: false
+      },
+      '/media': {
+        target: 'http://localhost:8090',
+        changeOrigin: true,
       }
     }
   }

@@ -1,4 +1,4 @@
 rootProject.name = 'service'
 
 include 'service', 'ui'
-include 'module:core', 'module:user'
+include 'module:core', 'module:user', 'module:media'

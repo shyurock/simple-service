@@ -1,4 +1,4 @@
-import {Api, ContentType} from "./Api.ts";
+import {Api, ContentType, RequestParams} from "./Api.ts";
 
 class ServerApi extends Api<any> {
     authController = {
@@ -9,7 +9,7 @@ class ServerApi extends Api<any> {
          * @name login
          * @request POST:/api/login
          */
-        login: (username: string, password: string) => {
+        login: (username: string, password: string, params: RequestParams = {}) => {
             const form = new URLSearchParams
             form.append('username', username)
             form.append('password', password)
@@ -18,6 +18,7 @@ class ServerApi extends Api<any> {
                 method: "POST",
                 body: form,
                 type: ContentType.UrlEncoded,
+                ...params
             })
         },
         /**
@@ -27,10 +28,11 @@ class ServerApi extends Api<any> {
          * @name logout
          * @request POST:/api/logout
          */
-        logOut: () =>
+        logOut: (params: RequestParams = {}) =>
             this.request<any, any>({
                 path: "/api/logout",
-                method: "POST"
+                method: "POST",
+                ...params
             })
     }
 }

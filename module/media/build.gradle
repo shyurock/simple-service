@@ -1,0 +1,21 @@
+plugins {
+	id 'groovy'
+	id 'org.springframework.boot' version "$springBoot"
+	id 'io.spring.dependency-management' version "$dependencyManagement"
+}
+
+sourceCompatibility = '17'
+
+dependencies {
+	implementation project(':module:core')
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	implementation 'org.apache.groovy:groovy'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

@@ -8,6 +8,7 @@ sourceCompatibility = '17'
 
 dependencies {
 	implementation project(':module:user')
+	implementation project(':module:media')
 	runtimeOnly project(':ui')
 
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'

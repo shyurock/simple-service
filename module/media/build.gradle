@@ -4,8 +4,6 @@ plugins {
 	id 'io.spring.dependency-management' version "$dependencyManagement"
 }
 
-sourceCompatibility = '17'
-
 dependencies {
 	implementation project(':module:core')
 

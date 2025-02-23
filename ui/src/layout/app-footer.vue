@@ -2,7 +2,7 @@
 
 <template>
     <div class="layout-footer">
-        SAKAI by
-        <a href="https://primevue.org" target="_blank" rel="noopener noreferrer" class="text-primary font-bold hover:underline">PrimeVue</a>
+      © {{ new Date().getFullYear() }}
+        <a href="https://github.com/shyurock/simple-service" target="_blank" rel="noopener noreferrer" class="text-primary font-bold hover:underline">Simple</a>
     </div>
 </template>

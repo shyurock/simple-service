@@ -1,9 +1,5 @@
-<script setup lang="ts">
-import api from "./api";
-
-const handle = () => api.authController.login('admin', 'admin')
-</script>
+<script lang="ts" setup></script>
 
 <template>
-      <router-view />
+   <router-view />
 </template>

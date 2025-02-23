@@ -1,52 +1,48 @@
 {
-  "name": "simple-service",
-  "private": true,
-  "version": "0.0.1",
-  "type": "module",
-  "scripts": {
-    "dev": "vite --mode server-dev",
-    "build": "vue-tsc && vite build",
-    "preview": "vite preview",
-    "generate-api": "swagger-typescript-api -p http://192.168.88.104:8080/api/swagger -o ./src/api --axios --module-name-first-tag"
-  },
-  "dependencies": {
-    "vue": "^3.2.47",
-    "axios": "^1.4.0",
-    "element-plus": "^2.3.4",
-    "moment-mini-ts": "^2.20.1",
-    "vue-router": "^4.1.6",
-    "pinia": "^2.0.35",
-    "pinia-plugin-persistedstate": "^3.1.0",
-    "vxe-table": "^4.3.12",
-    "animate.css": "^4.1.1",
-    "bootstrap-vue": "^2.23.1"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^4.1.0",
-    "typescript": "^5.0.2",
-    "vite": "^4.3.2",
-    "vue-tsc": "^1.4.2",
-    "vite-plugin-svg-icons": "^2.0.1",
-    "vite-plugin-html": "^3.2.0",
-    "swagger-typescript-api": "^12.0.4",
-    "sass": "^1.62.1"
-  },
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "vite",
-        "vue",
-        "rollup"
-      ]
+    "name": "simple-service",
+    "version": "1.0.0",
+    "scripts": {
+        "dev": "vite",
+        "check": "run-p",
+        "build": "run-p type-check build-only",
+        "preview": "vite preview",
+        "build-only": "vite build",
+        "type-check": "vue-tsc --noEmit"
+    },
+    "dependencies": {
+        "@primevue/themes": "^4.2.5",
+        "chart.js": "4.4.8",
+        "primeicons": "^7.0.0",
+        "primevue": "^4.2.5",
+        "vue": "^3.5.13",
+        "vue-router": "^4.5.0"
+    },
+    "devDependencies": {
+        "@primevue/auto-import-resolver": "^4.2.5",
+        "@rushstack/eslint-patch": "^1.10.5",
+        "@types/node": "^22.13.5",
+        "@vitejs/plugin-vue": "^5.2.1",
+        "@vue/eslint-config-prettier": "^10.2.0",
+        "@vue/tsconfig": "^0.7.0",
+        "autoprefixer": "^10.4.20",
+        "eslint": "^9.21.0",
+        "eslint-plugin-vue": "^9.32.0",
+        "npm-run-all": "^4.1.5",
+        "postcss": "^8.5.3",
+        "prettier": "^3.5.2",
+        "sass": "^1.85.0",
+        "tailwindcss": "3.4.6",
+        "tailwindcss-primeui": "0.3.2",
+        "typescript": "^5.7.3",
+        "unplugin-vue-components": "^28.4.0",
+        "vite": "^6.1.1",
+        "vue-tsc": "^2.2.2"
+    },
+    "optionalDependencies": {
+        "corepack": "0.29.4"
+    },
+    "packageManager": "yarn@4.5.1",
+    "engines": {
+        "node": ">= 18 < 22"
     }
-  },
-  "browserslist": [
-    "> 1%",
-    "not ie 11",
-    "not op_mini all"
-  ],
-  "engines": {
-    "node": ">= 16 <18",
-    "pnpm": ">= 6 <8"
-  }
 }

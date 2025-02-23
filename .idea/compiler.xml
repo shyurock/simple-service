@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="17">
+      <module name="service.ui2" target="21" />
+      <module name="service.ui2.main" target="21" />
+      <module name="service.ui2.test" target="21" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

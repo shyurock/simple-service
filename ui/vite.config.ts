@@ -1,42 +1,22 @@
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
-import {createHtmlPlugin} from 'vite-plugin-html'
-import {resolve} from 'path'
+import {fileURLToPath} from 'node:url'
+import Components from 'unplugin-vue-components/vite'
+import {PrimeVueResolver} from '@primevue/auto-import-resolver'
 
-const srcPath = resolve(__dirname, 'src')
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-      vue(),
-      createHtmlPlugin({
-        minify: true
-      })
-  ],
-  resolve: {
-    alias: {
-      '@/': `${srcPath}/`
+    plugins: [
+        vue(),
+        Components({
+            resolvers: [PrimeVueResolver()]
+        })
+    ],
+    css: ['@/assets/tailwind.css'],
+
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url))
+        }
     }
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@import "@/styles/variables";`
-      }
-    }
-  },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8090',
-        changeOrigin: true,
-        ws: true,
-        // only https
-        // secure: false
-      },
-      '/media': {
-        target: 'http://localhost:8090',
-        changeOrigin: true,
-      }
-    }
-  }
-})
+});

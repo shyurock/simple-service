@@ -9,7 +9,7 @@ subprojects {
 }
 
 ext {
-	set('testcontainersVersion', "1.18.0")
-	set('springBoot', '3.0.6')
-	set('dependencyManagement', '1.1.0')
+	set('testcontainersVersion', "1.20.5")
+	set('springBoot', '3.4.3')
+	set('dependencyManagement', '1.1.7')
 }

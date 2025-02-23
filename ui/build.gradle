@@ -1,12 +1,13 @@
 plugins {
-    id 'org.siouan.frontend-jdk11' version '6.0.0'
+    id 'org.siouan.frontend-jdk21' version '10.0.0'
     id 'java'
 }
 
 frontend {
-    nodeVersion = '16.20.0'
-    installScript = 'install'
-    assembleScript = 'run build'
+    nodeVersion = '22.14.0'
+    checkScript = 'run check'
+    assembleScript = 'run build-only'
+    verboseModeEnabled = true
 }
 
 jar {

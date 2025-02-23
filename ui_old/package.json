@@ -1,0 +1,53 @@
+{
+  "name": "simple-service",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --mode server-dev",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "api": "swagger-typescript-api -p http://localhost:8090/api/swagger -o ./src/api -n api.ts --axios --module-name-first-tag"
+  },
+  "dependencies": {
+    "vue": "^3.3.4",
+    "axios": "^1.4.0",
+    "element-plus": "^2.3.5",
+    "moment-mini-ts": "^2.20.1",
+    "vue-router": "^4.2.1",
+    "pinia": "^2.1.3",
+    "pinia-plugin-persistedstate": "^3.1.0",
+    "vxe-table": "^4.3.14",
+
+    "animate.css": "^4.1.1",
+    "bootstrap": "^5.2.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.1.0",
+    "typescript": "^5.0.4",
+    "vite": "^4.3.8",
+    "vue-tsc": "^1.6.5",
+    "vite-plugin-svg-icons": "^2.0.1",
+    "vite-plugin-html": "^3.2.0",
+    "swagger-typescript-api": "^12.0.4",
+    "sass": "^1.62.1"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "vite",
+        "vue",
+        "rollup"
+      ]
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "not ie 11",
+    "not op_mini all"
+  ],
+  "engines": {
+    "node": ">= 16 <18",
+    "pnpm": ">= 6 <8"
+  }
+}

@@ -4,8 +4,6 @@ plugins {
 	id 'io.spring.dependency-management' version "$dependencyManagement"
 }
 
-sourceCompatibility = '17'
-
 dependencies {
 	implementation project(':module:user')
 	implementation project(':module:media')
@@ -16,8 +14,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.0.4'
-	implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.0.4'
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.5.0'
 	implementation 'org.apache.groovy:groovy'
 	implementation 'org.springframework.session:spring-session-core'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -38,4 +36,12 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+bootBuildImage {
+	imageName = "simple-service:$version-$buildNumber"
+	environment = [
+			"BPE_DELIM_JAVA_TOOL_OPTIONS": " ",
+			"BPE_APPEND_JAVA_TOOL_OPTIONS": "-Dfile.encoding=UTF8 -XX:MaxMetaspaceSize=256M"
+	]
 }

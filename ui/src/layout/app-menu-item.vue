@@ -8,19 +8,27 @@ const route = useRoute()
 
 const { layoutState, setActiveMenuItem, toggleMenu } = useLayout()
 
-const props = withDefaults(defineProps<{
-    item: MenuItem,
-    index?: Number | undefined,
-    root?: Boolean | undefined,
-    parentItemKey?: String | undefined
-}>(), {
-    index: 0,
-    root: false,
-    parentItemKey: null
-})
+const props = defineProps({
+  item: {
+    type: Object,
+    default: () => ({})
+  },
+  index: {
+    type: Number,
+    default: 0
+  },
+  root: {
+    type: Boolean,
+    default: true
+  },
+  parentItemKey: {
+    type: String,
+    default: null
+  }
+});
 
 const isActiveMenu = ref(false)
-const itemKey = ref('')
+const itemKey = ref()
 const itemClick = (event: any, item: MenuItem) => {
     if (item.disabled) {
         event.preventDefault()

@@ -43,7 +43,10 @@ class UserData {
                                 ))
                         )
         )
+                .onErrorResume {
+                    log.error(it.message)
+                    Mono.just(false)
+                }
                 .block()
-
     }
 }

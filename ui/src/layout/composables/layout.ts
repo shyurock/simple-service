@@ -20,7 +20,7 @@ const layoutState = reactive({
 
 export function useLayout() {
     const setActiveMenuItem = (item: String) => {
-        layoutState.activeMenuItem = item || ""
+        layoutState.activeMenuItem = item.value || item
     };
 
     const toggleDarkMode = () => {

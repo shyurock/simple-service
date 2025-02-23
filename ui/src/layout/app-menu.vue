@@ -11,6 +11,13 @@ const model = ref<MenuItem[]>([
             { label: 'Page', icon: 'pi pi-address-book', to: '/page' }
         ]
     },
+  {
+    label: 'Admin',
+    items: [
+      { label: 'Users', icon: 'pi pi-fw pi-home', to: '/admin/users' },
+      { label: 'Roles', icon: 'pi pi-address-book', to: '/admin/roles' }
+    ]
+  },
 ])
 </script>
 

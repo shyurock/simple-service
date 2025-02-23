@@ -1,7 +1,8 @@
-import {defineStore} from 'pinia'
+import { defineStore } from 'pinia'
 import api from '@/api'
-import {nextTick} from 'vue'
+import { nextTick } from 'vue'
 import router from '@/router'
+import {useApi} from "../composables/use-api.ts";
 
 export const useAuthStore = defineStore('auth', {
     state: () => {
@@ -14,6 +15,7 @@ export const useAuthStore = defineStore('auth', {
     },
     actions: {
         login(username, password) {
+            const { api } = useApi()
             api.authController.login(username, password)
                 .then(() => {
                     this.token = 'token'

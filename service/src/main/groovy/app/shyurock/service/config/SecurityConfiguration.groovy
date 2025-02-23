@@ -2,6 +2,7 @@ package app.shyurock.service.config
 
 import app.shyurock.service.user.data.repository.UserRepository
 import app.shyurock.service.user.service.UserService
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -9,13 +10,18 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.WebFilterExchange
 import org.springframework.security.web.server.authentication.HttpStatusServerEntryPoint
+import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler
+import org.springframework.security.web.server.authentication.logout.HttpStatusReturningServerLogoutSuccessHandler
+import org.springframework.security.web.server.authentication.logout.ServerLogoutSuccessHandler
 import org.springframework.security.web.server.authorization.HttpStatusServerAccessDeniedHandler
 import reactor.core.publisher.Mono
 
@@ -38,7 +44,7 @@ class SecurityConfiguration {
                 log.info("Try log in with username $username")
                 userService.findUserByName(username)
                         .map {user ->
-                            //log.debug("User by $username found, try auth")
+                            log.debug("User by $username found, try auth")
                             User.withUsername(username)
                                     .password(user.passwordHash)
                                     .authorities(user.permission.permissions.toArray() as String[])
@@ -56,26 +62,29 @@ class SecurityConfiguration {
                     it.pathMatchers('/actuator', '/actuator/**').permitAll()
                             .pathMatchers('/api/swagger/**').permitAll()
                             .pathMatchers('/*', '/assets/**').permitAll()
+                            .pathMatchers('/api/login').permitAll()
                             .anyExchange().authenticated()
                 }
                 .formLogin {
                     it.loginPage('/api/login')
-                            .authenticationSuccessHandler { ex, auth ->
-                                userRepository.findByUsername(auth.name)
-                                        .flatMap { user ->
-                                            ex.exchange.response.statusCode = HttpStatus.OK
-                                            user.lastLoginDate = new Date()
-                                            userRepository.save(user)
-                                        }.then()
-                            }
+                            .authenticationSuccessHandler(new ServerAuthenticationSuccessHandler() {
+                                @Override
+                                Mono<Void> onAuthenticationSuccess(WebFilterExchange webFilterExchange, Authentication authentication) {
+                                    userRepository.findById(authentication.name)
+                                            .flatMap { user ->
+                                                webFilterExchange.exchange.response.statusCode = HttpStatus.OK
+                                                user.lastLoginDate = new Date()
+                                                userRepository.save(user)
+                                            }.then()
+                                }
+                            })
                             .authenticationFailureHandler { ex, e ->
                                 Mono.error(new Exception())
                             }
                 }
-                .logout {
-                    it
-                            .logoutUrl('/api/logout')
-                            .logoutSuccessHandler {it.exchange.response.statusCode = HttpStatus.OK }
+                .logout { ServerHttpSecurity.LogoutSpec spec ->
+                    spec.logoutUrl('/api/logout')
+                            .logoutSuccessHandler(new HttpStatusReturningServerLogoutSuccessHandler(HttpStatus.OK))
                 }
                 .exceptionHandling {
                     it.authenticationEntryPoint(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED))

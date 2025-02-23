@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {useLayout} from './composables/layout.ts'
 import AppConfigurator from "../layout/app-configurator.vue";
+import {userUserStore} from "@/stores/user.ts";
 
 const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout()
 </script>
@@ -50,7 +51,7 @@ const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout()
 <!--                        <i class="pi pi-inbox"></i>-->
 <!--                        <span>Messages</span>-->
 <!--                    </button>-->
-                    <button type="button" class="layout-topbar-action">
+                    <button type="button" class="layout-topbar-action" @click="userUserStore().logout()">
                         <i class="pi pi-user"></i>
                         <span>Profile</span>
                     </button>

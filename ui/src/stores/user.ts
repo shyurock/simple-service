@@ -1,8 +1,8 @@
-import { defineStore } from 'pinia'
-import { useStorage } from '@vueuse/core'
-import { useApi } from '@/composables/use-api.ts'
-import { computed, ref } from 'vue'
-import type { UserInfo } from '@/api/api.ts'
+import {defineStore} from 'pinia'
+import {useStorage} from '@vueuse/core'
+import {useApi} from '@/composables/use-api.ts'
+import {computed, ref} from 'vue'
+import type {UserInfo} from '@/api/api.ts'
 import router from "../router";
 
 export const userUserStore = defineStore('userStore', () => {
@@ -17,7 +17,7 @@ export const userUserStore = defineStore('userStore', () => {
             })
     }
 
-    const login = (username, password) => {
+    const login = (username: string, password: string) => {
         return api.authController.login({ username, password })
             .then(() => token.value = "true")
             .then(refreshUser)

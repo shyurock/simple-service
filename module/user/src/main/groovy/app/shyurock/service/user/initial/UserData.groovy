@@ -1,6 +1,6 @@
 package app.shyurock.service.user.initial
 
-import app.shyurock.service.user.data.model.Role
+
 import app.shyurock.service.user.data.model.User
 import app.shyurock.service.user.data.model.UserPermission
 import app.shyurock.service.user.data.repository.RoleRepository
@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono
 @Slf4j
 @Component
 class UserData {
-    final ADMIN_ROLE_NAME = 'admin'
     final ADMIN_USER_NAME = 'admin'
     final ADMIN_USER_PASSWORD = 'admin'
 
@@ -26,27 +25,22 @@ class UserData {
 
     @EventListener
     void contextRefresh(ContextRefreshedEvent event) {
-        Mono.zip(
-                roleRepository.findById(ADMIN_ROLE_NAME)
-                        .switchIfEmpty (roleRepository.save(new Role(
-                                name: ADMIN_ROLE_NAME,
-                                permissions: ['*']
-                        ))),
-                userRepository.findByUsername(ADMIN_USER_NAME)
-                        .switchIfEmpty (
-                                userRepository.save(new User(
-                                    username: ADMIN_USER_NAME,
-                                    passwordHash: passwordEncoder.encode(ADMIN_USER_PASSWORD),
-                                    permission: new UserPermission(
-                                            roles: [ADMIN_ROLE_NAME]
-                                    )
-                                ))
-                        )
-        )
+        createAdminUser()
                 .onErrorResume {
                     log.error(it.message)
                     Mono.just(false)
                 }
                 .block()
+    }
+
+    private Mono<User> createAdminUser() {
+        userRepository.findByUsername(ADMIN_USER_NAME)
+            .switchIfEmpty(
+                userRepository.save(new User(
+                    username: ADMIN_USER_NAME,
+                    passwordHash: passwordEncoder.encode(ADMIN_USER_PASSWORD),
+                    individualPermissions: [UserPermission.ADMIN]
+                ))
+            )
     }
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { userUserStore } from '@/stores/user.ts'
-import { useRoute, useRouter } from 'vue-router'
+import {ref} from 'vue'
+import {userUserStore} from '@/stores/user.ts'
+import {useRoute, useRouter} from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
@@ -11,7 +11,11 @@ const password = ref('')
 
 const loginHandle = () => {
   login(email.value, password.value)
-      .then(() => router.push(route.query.redirect ?? '/dashboard'))
+    .then(() => {
+      const toast = useToast()
+      toast.add({ severity: 'success', summary: 'Success', detail: 'Logged in successfully', life: 3000 })
+    })
+    .then(() => router.push(route.query.redirect ?? '/dashboard'))
 }
 
 </script>

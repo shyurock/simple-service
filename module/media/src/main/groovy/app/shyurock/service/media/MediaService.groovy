@@ -26,21 +26,23 @@ class MediaService {
     }
 
     Mono<Media> saveFile(String path, String fileName, MediaType type, byte[] data) {
+        def newMedia = new Media(
+                cacheControlTime: Duration.ofHours(4),
+                path: path,
+                readOnly: false
+        )
+
         mediaFileRepository.findByPath(path)
-                .defaultIfEmpty(new Media(
-                        cacheControlTime: Duration.ofHours(4),
-                        path            : path,
-                        readOnly        : false
-                ))
+                .defaultIfEmpty(newMedia)
                 .filter { !it.readOnly }
-                .flatMap {file ->
-                        mediaFileRepository.save(file.tap {
-                            content = new Binary(data)
-                            size = data.size()
-                            filename = fileName
-                            contentType = type.toString()
-                        })
+                .map { file ->
+                    file.content = new Binary(data)
+                    file.size = data.size()
+                    file.filename = fileName 
+                    file.contentType = type.toString()
+                    file
                 }
-                .switchIfEmpty(Mono.error(new FileAlreadyExistsException("File read only")))
+                .flatMap { mediaFileRepository.save(it) }
+                .switchIfEmpty(Mono.error(new FileAlreadyExistsException("Файл тільки для читання")))
     }
 }

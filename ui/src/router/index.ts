@@ -27,16 +27,21 @@ const router = createRouter({
                     component: () => import('@/pages/admin/users.vue')
                 },
                 {
-                    path: '/admin/roles',
-                    name: 'roles',
-                    component: () => import('@/pages/admin/roles.vue')
+                    path: '/admin/permissions',
+                    name: 'permissions',
+                    component: () => import('@/pages/admin/permissions.vue')
                 }
             ]
         },
         {
-            path: '/login',
+            path: '/auth/login',
             name: 'login',
             component: () => import('@/pages/login.vue')
+        },
+        {
+            path: '/auth/register',
+            name: 'register', 
+            component: () => import('@/pages/register.vue')
         },
         {
             path: '/landing',
@@ -51,19 +56,20 @@ const router = createRouter({
     ]
 })
 
-router.beforeEach((to, from) => {
+router.beforeEach(to => {
     const userStore = userUserStore()
 
-    if (userStore.isLoggedIn && to.path === '/login') {
-        return {
-            name: 'dashboard'
-        }
+    const publicRoutes = ['/auth/login', '/auth/register', '/landing']
+    
+    if (userStore.isLoggedIn && to.path === '/auth/login') {
+        return { name: 'dashboard' }
     }
-    if (!userStore.isLoggedIn && to.path !== '/login') {
-      return {
-          name: 'login',
-          query: { redirect: to.fullPath }
-      }
+
+    if (!userStore.isLoggedIn && !publicRoutes.includes(to.path)) {
+        return {
+            name: 'login',
+            query: { redirect: to.fullPath }
+        }
     }
 })
 

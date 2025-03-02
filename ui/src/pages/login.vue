@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import {ref} from 'vue'
-import {userUserStore} from '@/stores/user.ts'
-import {useRoute, useRouter} from 'vue-router'
+import { ref } from 'vue'
+import { userUserStore } from '@/stores/user.ts'
+import { useRoute, useRouter } from 'vue-router'
+import { useToast } from 'primevue/usetoast'
 
 const router = useRouter()
 const route = useRoute()
+const toast = useToast()
 const { login } = userUserStore()
 const email = ref('')
 const password = ref('')
@@ -12,7 +14,6 @@ const password = ref('')
 const loginHandle = () => {
   login(email.value, password.value)
     .then(() => {
-      const toast = useToast()
       toast.add({ severity: 'success', summary: 'Success', detail: 'Logged in successfully', life: 3000 })
     })
     .then(() => router.push(route.query.redirect ?? '/dashboard'))

@@ -47,7 +47,7 @@ class SecurityConfiguration {
                             log.debug("User by $username found, try auth")
                             User.withUsername(username)
                                     .password(user.passwordHash)
-                                    .authorities(user.permission.permissions.toArray() as String[])
+                                    .authorities(user.individualPermissions.collect {"ROLE_${it.name()}".toString() }.toArray() as String[])
                                     .build()
                         }
             }

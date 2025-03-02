@@ -25,48 +25,23 @@ export interface ApiFieldError {
   path?: string;
 }
 
-export interface User {
-  id?: string;
+export interface UserDto {
+  username?: string;
   /** @format date-time */
   createdAt?: string;
-  /** @format date-time */
-  updatedAt?: string;
-  /** @format int64 */
-  version?: number;
-  username?: string;
-  passwordHash?: string;
+  avatar?: string;
+  blocked?: boolean;
   /** @format date-time */
   lastLoginDate?: string;
-  profile?: UserProfile;
-  permission?: UserPermission;
-}
-
-export interface UserPermission {
-  /** @uniqueItems true */
   roles?: string[];
-  /** @uniqueItems true */
-  permissions?: string[];
+  individualPermissions?: ("ADMIN" | "READ_USER_LIST" | "EDIT_USER_LIST")[];
 }
 
-export interface UserProfile {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phone?: string;
-  avatar?: string;
-}
-
-export interface Role {
-  id?: string;
-  /** @format date-time */
-  createdAt?: string;
-  /** @format date-time */
-  updatedAt?: string;
-  /** @format int64 */
-  version?: number;
+export interface RoleDto {
   name?: string;
-  /** @uniqueItems true */
-  permissions?: string[];
+  description?: string;
+  permissions?: ("ADMIN" | "READ_USER_LIST" | "EDIT_USER_LIST")[];
+  users?: string[];
 }
 
 export interface UserInfo {
@@ -75,7 +50,12 @@ export interface UserInfo {
   permissions?: string[];
 }
 
-import type {AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType} from "axios";
+export interface PermissionDto {
+  name?: string;
+  description?: string;
+}
+
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
 
 export type QueryParamsType = Record<string | number, any>;
@@ -257,15 +237,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags user-controller
-     * @name UpdateUser
-     * @request PUT:/api/users/{username}
+     * @name DeleteRole
+     * @request PUT:/api/roles/{name}
      */
-    updateUser: (username: string, data: User, params: RequestParams = {}) =>
-      this.request<User, ApiErrorResponse>({
-        path: `/api/users/${username}`,
+    deleteRole: (name: string, params: RequestParams = {}) =>
+      this.request<void, ApiErrorResponse>({
+        path: `/api/roles/${name}`,
         method: "PUT",
-        body: data,
-        type: ContentType.Json,
         ...params,
       }),
 
@@ -277,7 +255,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/users
      */
     users: (params: RequestParams = {}) =>
-      this.request<User[], ApiErrorResponse>({
+      this.request<UserDto[], ApiErrorResponse>({
         path: `/api/users`,
         method: "GET",
         ...params,
@@ -287,12 +265,42 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags user-controller
-     * @name AddUser
+     * @name UpdateUser
      * @request POST:/api/users
      */
-    addUser: (data: User, params: RequestParams = {}) =>
-      this.request<User, ApiErrorResponse>({
+    updateUser: (data: UserDto, params: RequestParams = {}) =>
+      this.request<UserDto, ApiErrorResponse>({
         path: `/api/users`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags user-controller
+     * @name Roles
+     * @request GET:/api/roles
+     */
+    roles: (params: RequestParams = {}) =>
+      this.request<RoleDto[], ApiErrorResponse>({
+        path: `/api/roles`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags user-controller
+     * @name UpdateRole
+     * @request POST:/api/roles
+     */
+    updateRole: (data: RoleDto, params: RequestParams = {}) =>
+      this.request<RoleDto, ApiErrorResponse>({
+        path: `/api/roles`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -312,34 +320,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "GET",
         ...params,
       }),
-  };
-  roleController = {
-    /**
-     * No description
-     *
-     * @tags role-controller
-     * @name UpdateRole
-     * @request PUT:/api/roles/{name}
-     */
-    updateRole: (name: string, data: Role, params: RequestParams = {}) =>
-      this.request<Role, ApiErrorResponse>({
-        path: `/api/roles/${name}`,
-        method: "PUT",
-        body: data,
-        type: ContentType.Json,
-        ...params,
-      }),
 
     /**
      * No description
      *
-     * @tags role-controller
-     * @name Roles
-     * @request GET:/api/roles
+     * @tags user-controller
+     * @name Permissions
+     * @request GET:/api/permissions
      */
-    roles: (params: RequestParams = {}) =>
-      this.request<Role[], ApiErrorResponse>({
-        path: `/api/roles`,
+    permissions: (params: RequestParams = {}) =>
+      this.request<PermissionDto[], ApiErrorResponse>({
+        path: `/api/permissions`,
         method: "GET",
         ...params,
       }),
@@ -347,16 +338,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags role-controller
-     * @name AddRole
-     * @request POST:/api/roles
+     * @tags user-controller
+     * @name DeleteUser
+     * @request DELETE:/api/users/{username}
      */
-    addRole: (data: Role, params: RequestParams = {}) =>
-      this.request<Role, ApiErrorResponse>({
-        path: `/api/roles`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
+    deleteUser: (username: string, params: RequestParams = {}) =>
+      this.request<void, ApiErrorResponse>({
+        path: `/api/users/${username}`,
+        method: "DELETE",
         ...params,
       }),
   };

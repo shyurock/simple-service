@@ -15,7 +15,7 @@ const model = ref<MenuItem[]>([
     label: 'Admin',
     items: [
       { label: 'Users', icon: 'pi pi-fw pi-home', to: '/admin/users' },
-      { label: 'Permissions', icon: 'pi pi-address-book', to: '/admin/permissions' }
+      { label: 'Roles', icon: 'pi pi-address-book', to: '/admin/roles' }
     ]
   },
 ])

@@ -5,6 +5,10 @@
     justify-content: space-between;
     padding: 6rem 2rem 0 2rem;
     transition: margin-left var(--layout-section-transition-duration);
+
+    @media (max-width: 567px) {
+        padding: 6rem 0 0 0;
+    }
 }
 
 .layout-main {

@@ -27,9 +27,9 @@ const router = createRouter({
                     component: () => import('@/pages/admin/users.vue')
                 },
                 {
-                    path: '/admin/permissions',
-                    name: 'permissions',
-                    component: () => import('@/pages/admin/permissions.vue')
+                    path: '/admin/roles',
+                    name: 'roles',
+                    component: () => import('@/pages/admin/roles.vue')
                 }
             ]
         },

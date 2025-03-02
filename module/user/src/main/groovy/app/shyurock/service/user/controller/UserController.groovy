@@ -1,6 +1,6 @@
 package app.shyurock.service.user.controller
 
-
+import app.shyurock.service.user.dto.PermissionDto
 import app.shyurock.service.user.dto.RoleDto
 import app.shyurock.service.user.dto.UserDto
 import app.shyurock.service.user.dto.UserInfo
@@ -99,5 +99,12 @@ class UserController {
 
         log.info("Deleting role: {}", name)
         userService.deleteRole(authentication.name, name)
+    }
+
+    @GetMapping('/api/permissions')
+    Flux<PermissionDto> permissions() {
+
+        log.info("Retrieving all permissions")
+        userService.permissions()
     }
 }

@@ -5,6 +5,7 @@ import app.shyurock.service.user.data.model.User
 import app.shyurock.service.user.data.model.UserPermission
 import app.shyurock.service.user.data.repository.RoleRepository
 import app.shyurock.service.user.data.repository.UserRepository
+import app.shyurock.service.user.dto.PermissionDto
 import app.shyurock.service.user.dto.RoleDto
 import app.shyurock.service.user.dto.UserDto
 import app.shyurock.service.user.dto.UserInfo
@@ -29,6 +30,13 @@ class UserService {
      */
     Mono<User> findUserByName(String username) {
         userRepository.findByUsername(username)
+                .flatMap { user ->
+                    loadUserPermissions(user)
+                            .map { permissions ->
+                                user.individualPermissions = permissions
+                                user
+                            }
+                }
     }
 
     /**
@@ -110,7 +118,7 @@ class UserService {
                 .defaultIfEmpty(new Role(role.name))
                 .flatMap { entity ->
                     entity.description = role.description
-                    entity.permissions = role.permissions
+                    entity.permissions = role.permissions.toSet()
                     roleRepository.save(entity)
                 }
                 .flatMap { toRoleDto(it) }
@@ -134,7 +142,7 @@ class UserService {
      * @return A Mono containing a list of unique user permissions
      */
     private Mono<List<UserPermission>> loadUserPermissions(User user) {
-        roleRepository.findAllById(user.roles)
+        roleRepository.findAllById(user.roles ?: [])
                 .collectList()
                 .map { roles ->
                     def list = roles.collectMany { x -> x.permissions }
@@ -159,6 +167,23 @@ class UserService {
                             description: role.description,
                             permissions: role.permissions.toList(),
                             users: users
+                    )
+                }
+    }
+
+
+    /**
+     * Retrieves all available user permissions as a Flux of PermissionDto objects.
+     *
+     * @return Flux containing PermissionDto objects representing all possible user permissions
+     */
+    Flux<PermissionDto> permissions() {
+
+        Flux.fromArray(UserPermission.values())
+                .map { permission ->
+                    new PermissionDto(
+                            name: permission.name(),
+                            description: permission.description
                     )
                 }
     }
